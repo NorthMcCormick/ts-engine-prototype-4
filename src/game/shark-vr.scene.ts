@@ -8,7 +8,7 @@ import { Input } from '../engine/input.class';
 
 export class SceneVRShark extends Scene {
 	private _engine: BABYLON.Engine;
-	private _camera: BABYLON.WebVRFreeCamera;
+	private _camera: BABYLON.ArcRotateCamera;
 	private _light: BABYLON.HemisphericLight;
 	private _canvas: any;
 
@@ -38,23 +38,20 @@ export class SceneVRShark extends Scene {
 
 		this._scene.enablePhysics(this._gravityVector, this._physicsPlugin);
 
-		// this._camera = new BABYLON.ArcRotateCamera("Camera", 3 * Math.PI / 2, Math.PI / 4, 30, BABYLON.Vector3.Zero(), this._scene);
+		let vrHelper = this._scene.createDefaultVRExperience()
 
-		this._camera = new BABYLON.WebVRFreeCamera('camera1', new BABYLON.Vector3(0, 0, 0), this._scene);
+		// vrHelper.enableInteractions();
+
+		this._camera = new BABYLON.ArcRotateCamera("Camera", 3 * Math.PI / 2, Math.PI / 4, 30, BABYLON.Vector3.Zero(), this._scene);
+
+		// this._camera = new BABYLON.WebVRFreeCamera('camera1', new BABYLON.Vector3(0, 0, 0), this._scene);
 		this._camera.attachControl(this._canvas, true);
-
-		console.log(this._camera);
-
-		this._scene.onPointerDown = () => {
-			this._scene.onPointerDown = undefined;
-			this._camera.attachControl(this._canvas, true);
-		}
 		
 		Input.getInstance().init();
 
-		let button = document.querySelector('.vrButton');
+		// let button = document.querySelector('.vrButton');
 
-		button.addEventListener('click', this.attachWebVR, false );
+		// button.addEventListener('click', this.attachWebVR, false );
 
 		// this._camera.attachControl(this._canvas, true);
 
@@ -90,11 +87,11 @@ export class SceneVRShark extends Scene {
 			console.log(gamepad, state);
 		});*/
 
-		// this._light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), this._scene);
+		this._light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), this._scene);
 
 		// let skybox = GameUtils.createSkybox("skybox", "./assets/texture/skybox/TropicalSunnyDay", this._scene);
 
-		// let ground = GameUtils.createGround(this._scene);
+		let ground = GameUtils.createGround(this._scene);
 
 		/*
 		// creates the watermaterial and adds the relevant nodes to the renderlist
