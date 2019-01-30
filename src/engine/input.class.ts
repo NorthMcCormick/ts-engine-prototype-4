@@ -8,7 +8,8 @@ export class Input {
 	padBAxesStatus: any[] = [];
 
 	padA: string[] = [
-		'Start'
+		'Start',
+		'D-LEFT', 'D-RIGHT', 'D-UP', 'D-DOWN'
 	];
 
 	padB: string[] = [
