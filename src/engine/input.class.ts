@@ -1,21 +1,68 @@
+import { Observable } from 'rxjs';
 export class Input {
 	private static instance: Input;
 
 	controllers: any[] = []; // TODO: Types and multiple players. a player can have multiple controllers
 	buttonsCache: any[] = [];
 	buttonsStatus: any[] = [];
-	padAAxesStatus: any[] = [];
+	padAAxesStatus: any[] = [0, 0, 0, 0, 0, 0, 0, 0];
 	padBAxesStatus: any[] = [];
 
-	padA: string[] = [
+	axisChange: Observable<any> = Observable.create();
+
+	padAAxesMap = {
+		'D-LEFT': 7, // Default value is -1, -0.8 'clicked'
+		'D-RIGHT': 4, // Default value is -1, -0.8 'clicked'
+		'D-TOP': 3, // Default value is -1, -0.8 'clicked'
+		'D-BOTTOM': 6, // Default value is -1, -0.8 'clicked'
+		'J-LEFT-VERTICAL': 1,
+		'J-LEFT-HORIZONTAL': 0,
+		'J-RIGHT-VERTICAL': 5,
+		'J-RIGHT-HORIZONTAL': 2
+	};
+
+	padAAxesMapReverse = {
+		0: 'J-LEFT-HORIZONTAL',
+		1: 'J-LEFT-VERTICAL',
+		2: 'J-RIGHT-HORIZONTAL',
+		3: 'D-TOP',
+		4: 'D-RIGHT',
+		5: 'J-RIGHT-VERTICAL',
+		6: 'D-BOTTOM',
+		7: 'D-LEFT',
+	}
+
+	padA = [
 		'Start',
 		'D-LEFT', 'D-RIGHT', 'D-UP', 'D-DOWN'
 	];
 
-	padB: string[] = [
+	padB = [
 		'A', 'B', 'X', 'Y',
 		'LB', 'RB', 'LT', 'RT'
 	];
+
+	private constructor() {
+		
+	}
+
+	static getInstance() {
+		if (!Input.instance) {
+			Input.instance = new Input();
+			// ... any one time initialization goes here ...
+		}
+
+		return Input.instance;
+	}
+	
+	init() {
+		window.addEventListener('gamepadconnected', (e) => {
+			this.connect(e)
+		});
+		window.addEventListener('gamepaddisconnected', (e) => {
+			this.disconnect(e);
+		});
+	}
 
 	pollGamepads() {
 		var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
@@ -82,16 +129,20 @@ export class Input {
 		this.buttonsStatus = [];
 
 		var pressed = [];
+		let padAAxes = [];
+		let padBAxes = [];
 		
 		this.controllers.forEach((controller, controllerIndex) => {
 			// console.log(c);
-
-			let padAAxes = [];
 
 			if (controllerIndex === 0) {
 				for (let b = 0, t = controller.buttons.length; b < t; b++) {
 					if (controller.buttons[b].pressed || controller.buttons[b].value > 0) {
 						// console.log('Pressed: ', this.padA[b], controller.buttons[b], b);
+
+						/*if (this.padAAxesStatus[Input.getInstance().padAAxesStatus.length - 1] > -1) {
+							console.log('D LEFFFTT :) ');
+						}*/
 
 						pressed.push(this.padA[b]);
 					}
@@ -100,11 +151,29 @@ export class Input {
 				if (controller.axes) {
 					for (let a = 0 , x = controller.axes.length; a < x; a++) {
 						padAAxes.push(controller.axes[a].toFixed(2));
+
+						switch(a) {
+							/*case 0:
+							case 1:
+							case 2:
+							case 5:
+								if (controller.axes[a] > 0) {
+									pressed.push(this.padAAxesMapReverse[a]);
+								}
+							break;*/
+							
+							case 3:
+							case 4:
+							case 6:
+							case 7:
+							if (controller.axes[a] > -0.8) {
+								pressed.push(this.padAAxesMapReverse[a]);
+							}
+							break;
+						}
 					}
 				}
 			}
-
-			let padBAxes = [];
 
 			if (controllerIndex === 1) {
 				for (let b = 0, t = controller.buttons.length; b < t; b++) {
@@ -125,7 +194,8 @@ export class Input {
 			this.padAAxesStatus = padAAxes;
 			this.padBAxesStatus = padBAxes;
 			this.buttonsStatus = pressed;
-			
+	
+
 			/*if (controller.buttons) {
 				for (var b = 0, t = controller.buttons.length; b < t; b++) {
 					if (controller.buttons[b].pressed || controller.buttons[b].value > 0) {
@@ -142,7 +212,7 @@ export class Input {
 				// console.log(button);
 
 				if (button.pressed) {
-					console.log(button, controller);
+					// console.log(button, controller);
 				}
 			});
 
@@ -170,57 +240,7 @@ export class Input {
 						}
 					}
 				}
-			}
-
-			if (controllerIndex === 1) {
-				for (let i = 0; i < 4; i++) {
-					if (controller.axes[i]) {
-						switch(i) {
-							case 0:
-							case 1:
-							case 2:
-							case 5:
-								if (controller.axes[i] > 0) {
-									console.log(controller.axes[i], controller);
-								}
-							break;
-		
-							case 3:
-							case 4:
-							case 6:
-							case 7:
-								if (controller.axes[i] > -1) {
-									console.log(controller.axes[i], controller);
-								}
-							break;
-	
-							
-						}
-					}
-				}
 			}*/
-		});
-	}
-
-	private constructor() {
-		
-	}
-
-	static getInstance() {
-		if (!Input.instance) {
-			Input.instance = new Input();
-			// ... any one time initialization goes here ...
-		}
-
-		return Input.instance;
-	}
-	
-	init() {
-		window.addEventListener('gamepadconnected', (e) => {
-			this.connect(e)
-		});
-		window.addEventListener('gamepaddisconnected', (e) => {
-			this.disconnect(e);
 		});
 	}
 }

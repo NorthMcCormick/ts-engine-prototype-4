@@ -106,6 +106,7 @@ export class SceneVRShark extends Scene {
 	sceneBeforeRender(deltaTime) {
 		super.sceneBeforeRender(deltaTime);
 
+		// let inputManager = Input.getInstance();
 		Input.getInstance().update();
 
 		if (Input.getInstance().buttonPressed('A', false)) {
@@ -115,6 +116,15 @@ export class SceneVRShark extends Scene {
 		if (Input.getInstance().buttonPressed('A', true)) {
 			console.log('AAA!');
 		}
+
+		if (Input.getInstance().buttonPressed('D-LEFT', false)) {
+			console.log('Lefties!');
+		}
+
+		// console.log(inputManager.padAAxesStatus);
+
+		// console.log((Input.getInstance().padAAxesStatus))
+	
 
 		// this._gamepadManager.update();
 
