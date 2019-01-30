@@ -8,7 +8,7 @@ import { Input } from '../engine/input.class';
 
 export class SceneVRShark extends Scene {
 	private _engine: BABYLON.Engine;
-	private _camera: BABYLON.ArcRotateCamera;
+	private _camera: BABYLON.VRDeviceOrientationGamepadCamera;
 	private _light: BABYLON.HemisphericLight;
 	private _canvas: any;
 
@@ -42,7 +42,23 @@ export class SceneVRShark extends Scene {
 
 		// vrHelper.enableInteractions();
 
-		this._camera = new BABYLON.ArcRotateCamera("Camera", 3 * Math.PI / 2, Math.PI / 4, 30, BABYLON.Vector3.Zero(), this._scene);
+		this._camera = new BABYLON.VRDeviceOrientationGamepadCamera("FollowCam", new BABYLON.Vector3(0, 10, -10), this._scene);
+
+		/*this._camera.radius = 30;
+
+		// The goal height of camera above local origin (centre) of target
+		this._camera.heightOffset = 10;
+
+		// The goal rotation of camera around local origin (centre) of target in x y plane
+		this._camera.rotationOffset = 0;
+
+		// Acceleration of camera in moving from current to goal position
+		this._camera.cameraAcceleration = 0.005
+
+		// The speed at which acceleration is halted
+		this._camera.maxCameraSpeed = 10*/
+
+		// this._camera = new BABYLON.ArcRotateCamera("Camera", 3 * Math.PI / 2, Math.PI / 4, 30, BABYLON.Vector3.Zero(), this._scene);
 
 		// this._camera = new BABYLON.WebVRFreeCamera('camera1', new BABYLON.Vector3(0, 0, 0), this._scene);
 		this._camera.attachControl(this._canvas, true);
