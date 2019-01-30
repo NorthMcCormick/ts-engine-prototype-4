@@ -8,8 +8,9 @@ import { Input } from '../engine/input.class';
 
 export class SceneVRShark extends Scene {
 	private _engine: BABYLON.Engine;
-	private _camera: BABYLON.ArcRotateCamera;
+	private _camera: BABYLON.WebVRFreeCamera;
 	private _light: BABYLON.HemisphericLight;
+	private _canvas: any;
 
 	private _sharkMesh: BABYLON.AbstractMesh;
 	private _sharkAnimationTime = 0;
@@ -23,16 +24,37 @@ export class SceneVRShark extends Scene {
 		console.log(`Shark Scene Instance ${ this.sceneName }`);
 	}
 
-	initScene(_engine) {
-		this._engine = _engine;
+	attachWebVR = () => {
+		this._camera.attachControl(this._canvas, true);
 
-		super.initScene(this._engine);
+		window.removeEventListener('click', this.attachWebVR, false);
+	}
+
+	initScene(_engine, _canvas) {
+		this._engine = _engine;
+		this._canvas = _canvas;
+
+		super.initScene(this._engine, _canvas);
 
 		this._scene.enablePhysics(this._gravityVector, this._physicsPlugin);
 
-		this._camera = new BABYLON.ArcRotateCamera("Camera", 3 * Math.PI / 2, Math.PI / 4, 30, BABYLON.Vector3.Zero(), this._scene);
+		// this._camera = new BABYLON.ArcRotateCamera("Camera", 3 * Math.PI / 2, Math.PI / 4, 30, BABYLON.Vector3.Zero(), this._scene);
 
+		this._camera = new BABYLON.WebVRFreeCamera('camera1', new BABYLON.Vector3(0, 0, 0), this._scene);
+		this._camera.attachControl(this._canvas, true);
+
+		console.log(this._camera);
+
+		this._scene.onPointerDown = () => {
+			this._scene.onPointerDown = undefined;
+			this._camera.attachControl(this._canvas, true);
+		}
+		
 		Input.getInstance().init();
+
+		let button = document.querySelector('.vrButton');
+
+		button.addEventListener('click', this.attachWebVR, false );
 
 		// this._camera.attachControl(this._canvas, true);
 
@@ -68,11 +90,13 @@ export class SceneVRShark extends Scene {
 			console.log(gamepad, state);
 		});*/
 
-		/*this._light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), this._scene);
+		// this._light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), this._scene);
 
-		let skybox = GameUtils.createSkybox("skybox", "./assets/texture/skybox/TropicalSunnyDay", this._scene);
+		// let skybox = GameUtils.createSkybox("skybox", "./assets/texture/skybox/TropicalSunnyDay", this._scene);
 
-		let ground = GameUtils.createGround(this._scene);
+		// let ground = GameUtils.createGround(this._scene);
+
+		/*
 		// creates the watermaterial and adds the relevant nodes to the renderlist
 		let waterMaterial = GameUtils.createWater(this._scene);
 

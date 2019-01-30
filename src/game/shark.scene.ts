@@ -21,10 +21,10 @@ export class SceneShark extends Scene {
 		console.log('Shark Scene Instance');
 	}
 
-	initScene(_engine) {
+	initScene(_engine, _canvas) {
 		this._engine = _engine;
 
-		super.initScene(this._engine);
+		super.initScene(this._engine, _canvas);
 
 		this._scene.enablePhysics(this._gravityVector, this._physicsPlugin);
 

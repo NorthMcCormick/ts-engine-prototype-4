@@ -3,6 +3,7 @@ import * as BABYLON from 'babylonjs';
 import * as GUI from "babylonjs-gui";
 import { Scene } from './scene.class';
 
+
 export class Engine {
   private static instance: Engine;
   
@@ -32,7 +33,7 @@ export class Engine {
   setScene(scene: Scene) {
     // TODO: Scene destroy
     this.currentScene = scene;
-    this.currentScene.initScene(this._engine);
+    this.currentScene.initScene(this._engine, this._canvas);
   }
   
   /**
