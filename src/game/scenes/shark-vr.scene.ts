@@ -1,10 +1,13 @@
 import * as BABYLON from 'babylonjs';
 import * as GUI from "babylonjs-gui";
 
-import { Scene } from '../engine/scene.class';
-import { GameUtils } from '../game-utils';
+import { Scene } from '../../engine/scene.class';
+import { GameUtils } from '../../game-utils';
 
-import { Input } from '../engine/input.class';
+import { Input } from '../../engine/input.class';
+import { Player } from '../actors/player.actor';
+
+// import { } from '
 
 export class SceneVRShark extends Scene {
 	private _engine: BABYLON.Engine;
@@ -43,6 +46,8 @@ export class SceneVRShark extends Scene {
 		// vrHelper.enableInteractions();
 
 		this._camera = new BABYLON.VRDeviceOrientationGamepadCamera("FollowCam", new BABYLON.Vector3(0, 10, -10), this._scene);
+
+		let player = new Player(this._scene);
 
 		/*this._camera.radius = 30;
 

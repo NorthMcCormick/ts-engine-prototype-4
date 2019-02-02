@@ -1,8 +1,8 @@
 import * as BABYLON from 'babylonjs';
 import * as GUI from "babylonjs-gui";
 
-import { Scene } from '../engine/scene.class';
-import { GameUtils } from '../game-utils';
+import { Scene } from '../../engine/scene.class';
+import { GameUtils } from '../../game-utils';
 
 export class SceneShark extends Scene {
 	private _engine: BABYLON.Engine;
